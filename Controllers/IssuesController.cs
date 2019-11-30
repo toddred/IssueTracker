@@ -1,41 +1,76 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using BugTrackerIssueApi;
+using BugTrackerIssueApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+// TODO: Edit Issues 
+// TODO: Close Issues
+// TODO: Soft Delete Issues
 
-namespace bugtrackerIssuesApi.Controllers
+
+namespace BugTrackerIssueApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Consumes("application/json")]
+    [Produces("application/json")]
     public class IssuesController : ControllerBase
     {
-        private readonly bugtrackerContext _context;
-
-        public IssuesController(bugtrackerContext context)
+        private readonly BugTrackerContext _context;
+        private readonly ILogger _logger;
+        public IssuesController(BugTrackerContext context)
         {
             _context = context;
         }
-        // GET : api/Issues
+        
+        // GET : issues
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Issues>>> Get()
+        public async Task<IActionResult> Get()
         {
-            var myIssues = _context.Issues;
-            return myIssues.ToArray();
+            return Ok(await _context.Issues.ToArrayAsync());
         }
-        // POST: api/IssueItem
-        [HttpPost]
-        public async Task<ActionResult<Issues>> PostIssue(Issues issue)
+        // GET : issues/1
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Details(int id)
         {
-            _context.Issues.Add(issue);
-            await _context.SaveChangesAsync();
+            return Ok(_context.Issues.Find(id));
+        }
+        // POST: issues
+        [HttpPost]
+        public async Task<ActionResult> Create([FromBody]Issue issue)
+        {
+            try
+            {
+                _context.Issues.Add(issue);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+               
+            }
+            return Ok(issue);
 
-            //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
-            return CreatedAtAction(nameof(Get), new { id = issue.Id }, issue);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Archive([FromRoute]int id)
+        {
+            try
+            {
+                var issue = _context.Issues.Find(id);
+                issue.Active = false;
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+               
+            }
+            return Ok();
         }
     }
 }

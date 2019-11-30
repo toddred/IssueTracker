@@ -28,7 +28,7 @@ namespace BugTrackerIssueApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<bugtrackerContext>(options =>
+            services.AddDbContext<BugTrackerContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("BugtrackerDatabase")));
             services.AddCors(options =>
             {
@@ -38,6 +38,8 @@ namespace BugTrackerIssueApi
                         builder.AllowAnyOrigin();
                         //WithOrigins("http://localhost",
                         //"https://localhost");
+                        builder.AllowAnyMethod();
+                        builder.AllowAnyHeader();
                     });
             });
 
