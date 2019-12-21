@@ -9,5 +9,11 @@ namespace BugTrackerIssueApi.Models
         public string Name { get; set; }
         public int Priority { get; set; }
         public bool Active { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime? ModifiedOn { get; set; }
+        public DateTime? ClosedOn { get; set; }
+        
+        public ICollection<Comment> Comments { get; set; }
     }
 }

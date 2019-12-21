@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BugTrackerIssueApi
 {
@@ -30,17 +33,36 @@ namespace BugTrackerIssueApi
             services.AddControllers();
             services.AddDbContext<BugTrackerContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("BugtrackerDatabase")));
+            
             services.AddCors(options =>
             {
                 options.AddPolicy(MyAllowSpecificOrigins,
                     builder =>
                     {
                         builder.AllowAnyOrigin();
-                        //WithOrigins("http://localhost",
-                        //"https://localhost");
                         builder.AllowAnyMethod();
                         builder.AllowAnyHeader();
                     });
+            });
+            
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("move this to configuration")); 
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(config =>
+            {
+                config.RequireHttpsMetadata = false;
+                config.SaveToken = true;
+                config.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    IssuerSigningKey = signingKey,
+                    ValidateAudience = false,
+                    ValidateIssuer =  false,
+                    ValidateLifetime = false,
+                    ValidateIssuerSigningKey = true,
+                    
+                };
             });
 
 
@@ -53,6 +75,9 @@ namespace BugTrackerIssueApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseAuthentication();
+            
             app.UseCors(MyAllowSpecificOrigins);
             
             app.UseHttpsRedirection();

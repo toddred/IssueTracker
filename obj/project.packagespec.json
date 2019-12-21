@@ -1,10 +1,10 @@
 ﻿{
   "version": "1.0.0",
   "restore": {
-    "projectUniqueName": "/home/toddrederburg/RiderProjects/BugTrackerIssueApi/BugTrackerIssueApi.csproj",
+    "projectUniqueName": "/home/toddrederburg/RiderProjects/BugTracker/BugTrackerIssueApi/BugTrackerIssueApi.csproj",
     "projectName": "BugTrackerIssueApi",
-    "projectPath": "/home/toddrederburg/RiderProjects/BugTrackerIssueApi/BugTrackerIssueApi.csproj",
-    "outputPath": "/home/toddrederburg/RiderProjects/BugTrackerIssueApi/obj/",
+    "projectPath": "/home/toddrederburg/RiderProjects/BugTracker/BugTrackerIssueApi/BugTrackerIssueApi.csproj",
+    "outputPath": "/home/toddrederburg/RiderProjects/BugTracker/BugTrackerIssueApi/obj/",
     "projectStyle": "PackageReference",
     "fallbackFolders": [
       "/usr/share/dotnet/sdk/NuGetFallbackFolder"
@@ -29,6 +29,10 @@
   "frameworks": {
     "netcoreapp3.0": {
       "dependencies": {
+        "Microsoft.AspNetCore.Authentication.JwtBearer": {
+          "target": "Package",
+          "version": "[3.0.0, )"
+        },
         "Microsoft.EntityFrameworkCore": {
           "target": "Package",
           "version": "[3.0.1, )"
@@ -53,7 +57,22 @@
         "net48"
       ],
       "assetTargetFallback": true,
-      "warn": true
+      "warn": true,
+      "downloadDependencies": [
+        {
+          "name": "Microsoft.NETCore.App.Ref",
+          "version": "[3.0.0, 3.0.0]"
+        }
+      ],
+      "frameworkReferences": {
+        "Microsoft.AspNetCore.App": {
+          "privateAssets": "none"
+        },
+        "Microsoft.NETCore.App": {
+          "privateAssets": "all"
+        }
+      },
+      "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.0.101/RuntimeIdentifierGraph.json"
     }
   }
 }
