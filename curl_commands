@@ -1,0 +1,6 @@
+curl -X POST -k -H "Content-Type: application/json"  -d '{"username":"toddtodd","password":"password"}' https://localhost:5002/user/authenticate
+
+curl -X POST -k -H "Content-Type: application/json"  -d '{"username":"toddtoddtodd","password":"password","email":"todsemail"}' https://localhost:5001/user/register
+
+{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIn0.mLX8vO1DqwBbAST0R1Fs76u2_GdCeWto8N1QjUOhNtg"}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIn0.mLX8vO1DqwBbAST0R1Fs76u2_GdCeWto8N1QjUOhNtg
