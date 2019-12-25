@@ -1,8 +1,11 @@
 <template>
   <div>
     <md-list-item>
+      <span>
       <h4>{{issue.name}}</h4>
-      <md-button class="md-fab"><md-icon>edit</md-icon></md-button>
+      <p>{{issue.createdOn}}</p>
+      </span>
+      <md-button class="md-accent" @click="editItem(issue)">Edit</md-button>
       <md-button class="md-accent" @click="archive(issue.id)">Archive</md-button>
     </md-list-item>
   </div>
@@ -17,11 +20,9 @@ export default {
       ...mapActions(['archiveIssue']),
       archive(id){
         this.archiveIssue(id);
-      }
-    },
-    computed(){
-      return {
-
+      },
+      editItem(issue){
+        this.$router.push({ name: 'edit', params:{ issue }})
       }
     }
 }

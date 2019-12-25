@@ -17,9 +17,8 @@ import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "IssueList",
-  //props: ["issues"],
   computed: {
-    ...mapGetters(['allIssues', 'authenticated'])},
+    ...mapGetters(['allIssues', 'isAuthenticated'])},
   components: {
     IssueItem
   },

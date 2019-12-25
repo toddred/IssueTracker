@@ -6,53 +6,60 @@ const state = {
 };
 const getters = {
   allIssues: state => state.issues
+  //getIssue: ({ state }, id) => state.issues.find(issue => issue.id === id)
 };
 const actions = {
   //TODO: Handle sad path in all actions
   async getIssues({ commit }) {
     const response = await Axios.get(BASE_URL);
-    if (response.status == 200){
+    if (response.status == 200) {
       commit("setIssues", response.data);
-    }
-    else{
+    } else {
       // handle error
     }
   },
-  async secureIssues({ commit , state}) {
-    if(state.authenticated){
-      const response = await Axios.get(BASE_URL + "/secure",{
-        headers: {
-          //"Content-Type": "application/json",
-          "Authorization": "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIn0.mLX8vO1DqwBbAST0R1Fs76u2_GdCeWto8N1QjUOhNtg"
-        }
-  
-      });
-      //if (response.status == 200){
-        commit("setIssues", response.data);
-      //}
-      // else{
-      //   // handle error
-      // }
-    }
-  },
-  async addIssue({ commit }, issue) {
+  // async secureIssues({ commit, state }) {
+  //   if (state.authenticated) {
+  //     const response = await Axios.get(BASE_URL + "/secure", {
+  //       headers: {
+  //         //"Content-Type": "application/json",
+  //         Authorization: state.auth.token
+  //       }
+  //     });
+  //     //if (response.status == 200){
+  //     commit("setIssues", response.data);
+  //     //}
+  //     // else{
+  //     //   // handle error
+  //     // }
+  //   }
+  // },
+  async addIssue({ commit, rootState }, issue) {
     const response = await Axios.post(BASE_URL, issue, {
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIn0.mLX8vO1DqwBbAST0R1Fs76u2_GdCeWto8N1QjUOhNtg"
+        Authorization: rootState.auth.token
       }
-
     });
     commit("createIssue", response.data);
-
   },
-  async archiveIssue({ commit }, id) {
-    const response = await Axios.delete(`${BASE_URL}/${id}`);
+  async archiveIssue({ commit, rootState }, id) {
+    const response = await Axios.delete(`${BASE_URL}/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: rootState.auth.token
+      }
+    });
     response.statusText;
     commit("deleteIssue", id);
   },
-  async editIssue({ commit }, id, issue) {
-    const response = await Axios.put(`${BASE_URL}/edit/${id}`, issue);
+  async editIssue({ commit, rootState }, issue) {
+    const response = await Axios.put(BASE_URL, issue, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: rootState.auth.token
+      }
+    });
     commit("changeIssue", response.data);
   }
 };
@@ -62,8 +69,9 @@ const mutations = {
   deleteIssue: (state, id) =>
     (state.issues = state.issues.filter(issue => issue.id !== id)),
   changeIssue: (state, issue) => {
-    const idx = state.issues.findIndex(old => old.id === issue.id);
+    let idx = state.issues.findIndex(old => old.id == issue.id);
     state.issues[idx] = issue;
+
   }
 };
 

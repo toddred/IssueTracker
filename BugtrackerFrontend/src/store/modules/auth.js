@@ -1,8 +1,8 @@
 import Axios from "axios";
 const BASE_URL = "https://localhost:5002/user";
-
+const BEARER = 'Bearer ';
 const state = {
-  token: {},
+  token: "",
   authenticated: false
 };
 const getters = {
@@ -28,7 +28,7 @@ const actions = {
 const mutations = {
 
        setToken: (state, token) => {
-           state.token = token;
+           state.token = BEARER + token.toString();
            state.authenticated = true; 
         },
 };

@@ -4,3 +4,8 @@ curl -X POST -k -H "Content-Type: application/json"  -d '{"username":"toddtoddto
 
 {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIn0.mLX8vO1DqwBbAST0R1Fs76u2_GdCeWto8N1QjUOhNtg"}
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIn0.mLX8vO1DqwBbAST0R1Fs76u2_GdCeWto8N1QjUOhNtg
+
+curl -k -H "Content-Type: application/json" https://localhost:5001/issues
+
+curl -k -H "Content-Type: application/json" https://localhost:5001/issues/secure
+

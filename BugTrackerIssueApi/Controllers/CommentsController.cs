@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using BugTrackerIssueApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -15,37 +16,35 @@ namespace BugTrackerIssueApi.Controllers
     public class CommentsController : ControllerBase
     {
         private readonly BugTrackerContext _context;
-        private readonly ILogger _logger;
+        private readonly ILogger<CommentsController> _logger;
         
-        public CommentsController(BugTrackerContext context, ILogger logger)
+        public CommentsController(BugTrackerContext context, ILogger<CommentsController> logger)
         {
             _context = context;
             _logger = logger;
         }
 
-        [HttpGet("/{id}")]
-        public async Task<ActionResult> GetComments(int issueId)
+        [HttpGet("issue/{id}")]
+        public async Task<IActionResult> GetComments([FromRoute]int id)
         {
-            if (issueId <= 0)
-            {
-                _logger.LogWarning("**ERROR** Invalid Issue Id");
-                return BadRequest();
-            }
-            return Ok(await _context.Comments.Where(comment => comment.IssueId == issueId).ToListAsync());
+            if (id > 0)
+                return Ok(await _context.Comments
+                    .Where(comment =>
+                        comment.IssueId == id && comment.Active)
+                    .ToListAsync());
+            _logger.LogWarning("**ERROR** Invalid Issue Id");
+            return BadRequest();
         }
 
-        [HttpGet("/comment/{id}")]
-        public async Task<IActionResult> GetComment(int commentId)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetComment([FromRoute]int id)
         {
-            if (commentId <= 0)
-            {
-                _logger.LogWarning("**ERROR** Invalid Issue Id");
-                return BadRequest();
-            }
-            return Ok(await _context.Comments.FindAsync(commentId));
+            if (id > 0) return Ok(await _context.Comments.FindAsync(id));
+            _logger.LogWarning("**ERROR** Invalid Issue Id");
+            return BadRequest();
         }
-
-        [HttpPost("/{id}")]
+        [Authorize]
+        [HttpPost]
         public async Task<IActionResult> CreateComment([FromBody] Comment comment)
         {
             // TODO: some server side model validation? 
@@ -61,15 +60,35 @@ namespace BugTrackerIssueApi.Controllers
             }
             return NotFound();
         }
-
-        [HttpPut("/{id}")]
+        [Authorize]
+        [HttpPut]
         public async Task<IActionResult> EditComment([FromBody] Comment comment)
         {
             try
             {
+                comment.ModifiedOn = DateTime.Now;
                 _context.Comments.Update(comment);
                 await _context.SaveChangesAsync();
                 return Ok(comment);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+            }
+            return BadRequest();
+        }
+        [Authorize]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> ArchiveComment([FromRoute] int id)
+        {
+            
+            try
+            {
+                var comment = await _context.Comments.FindAsync(id);
+                comment.ModifiedOn = DateTime.Now;
+                comment.Active = false;
+                await _context.SaveChangesAsync();
+                return Ok();
             }
             catch (Exception e)
             {

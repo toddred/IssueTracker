@@ -8,8 +8,11 @@
         <md-field>
           <md-input type="text" v-model="issue.name" placeholder="describe issue" />
         </md-field>
-        <md-field>
-          <md-button type="submit" @click="onClick">Create</md-button>
+          <md-field v-if="issue.id > 0">
+            <md-button type="submit" @click="edit">Confirm</md-button>
+          </md-field>
+        <md-field v-else>
+          <md-button type="submit" @click="create">Create</md-button>
         </md-field>
       </md-card-content>
     </md-card>
@@ -23,10 +26,14 @@ export default {
   name: "addIssue",
   props: ["issue"],
   methods: {
-    ...mapActions(["addIssue"]),
-    onClick() {
+    ...mapActions(['addIssue', 'editIssue']),
+    create () {
       this.addIssue(this.issue);
-      this.$router.push('/')
+      this.$router.push('/');
+    },
+    edit(){
+      this.editIssue(this.issue);
+      this.$router.push('/');
     }
   }
 };

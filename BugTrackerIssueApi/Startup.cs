@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -45,6 +46,8 @@ namespace BugTrackerIssueApi
                     });
             });
             
+            services.AddLogging(options => { options.AddConsole(); });
+            
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("move this to configuration")); 
             services.AddAuthentication(options =>
             {
@@ -75,7 +78,6 @@ namespace BugTrackerIssueApi
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseAuthentication();
             
             app.UseCors(MyAllowSpecificOrigins);

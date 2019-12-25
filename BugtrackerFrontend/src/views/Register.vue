@@ -55,7 +55,6 @@ export default {
             this.registerUser(this.register_DTO);
             this.$router.push("/");
         }
-
     },
     onEnter(event) {
       if (event.keyCode == ENTER_KEY) 

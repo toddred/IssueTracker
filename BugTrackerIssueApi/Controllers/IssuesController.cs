@@ -19,8 +19,9 @@ namespace BugTrackerIssueApi.Controllers
     public class IssuesController : ControllerBase
     {
         private readonly BugTrackerContext _context;
-        private readonly ILogger _logger;
-        public IssuesController(BugTrackerContext context, ILogger logger)
+        private readonly ILogger<IssuesController> _logger;
+        
+        public IssuesController(BugTrackerContext context, ILogger<IssuesController> logger)
         {
             _context = context;
             _logger = logger;
@@ -33,20 +34,13 @@ namespace BugTrackerIssueApi.Controllers
             return Ok(await _context.Issues.Where(issue => issue.Active).ToArrayAsync());
         }
         
-        // GET : issues/secure
-        [Authorize]
-        [HttpGet("secure")]
-        public async Task<IActionResult> GetSecure()
-        {
-            return Ok(await _context.Issues.ToArrayAsync());
-        }
         // GET : issues/1
         [HttpGet("{id}")]
         public async Task<IActionResult> Details(int id)
         {
             return Ok(await _context.Issues.FindAsync(id));
         }
-        // POST: issues
+        // POST: /issues
         [Authorize]
         [HttpPost]
         public async Task<ActionResult> Create([FromBody]Issue issue)
@@ -58,40 +52,27 @@ namespace BugTrackerIssueApi.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError("ERROR**",e.Message);
+                _logger.LogError(e.Message);
             }
             return Ok(issue);
         }
-        // PUT : issues/edit/{id}
+        // PUT : /issues
         [Authorize]
-        [HttpPut("edit/{id}")]
-        public async Task<ActionResult> Edit([FromRoute] int id,[FromBody]Issue issue)
+        [HttpPut]
+        public async Task<ActionResult> Edit([FromBody]Issue issue)
         {
-            var myIssue = await _context.Issues.FindAsync(id);
-            // if active  and the issue in the route matches id replace edited items
-            if (myIssue.Active || myIssue.Id == issue.Id)
+            try
             {
-                try
-                {
-                    _context.Issues.Update(issue);
-                    await _context.SaveChangesAsync();
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError("ERROR**",e.Message);
-                    throw;
-                }
+                issue.ModifiedOn = DateTime.Now;
+                _context.Issues.Update(issue);
+                await _context.SaveChangesAsync();
                 return Ok(issue);
             }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+            }
             return BadRequest();
-
-        }
-        // PATCH : issues/close/{id}
-        [Authorize]
-        [HttpPatch("close/{id}")]
-        public async Task<ActionResult> Close([FromRoute] int id, [FromBody] Issue issue)
-        {
-            return Ok();
         }
         // DELETE : issues/{id}
         [Authorize]
@@ -102,13 +83,16 @@ namespace BugTrackerIssueApi.Controllers
             {
                 var issue = _context.Issues.Find(id);
                 issue.Active = false;
+                issue.ModifiedOn = DateTime.Now;
                 await _context.SaveChangesAsync();
+                return Ok();
             }
             catch (Exception e)
             {
-                _logger.LogError("ERROR**",e.Message);
+                _logger.LogError(e.Message);
+                
             }
-            return Ok();
+            return BadRequest();
         }
     }
 }

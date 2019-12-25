@@ -7,9 +7,7 @@
 </template>
 
 <script>
-import IssueList from "../components/issue-list";
-
-
+import IssueList from "../components/issue-list"
 export default {
   name: "Home",
   components: {

@@ -1,14 +1,12 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
-import Create from "../views/Create.vue";
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
     name: "home",
-    component: Home
+    component: () => import("../views/Home.vue")
   },
   {
     path: "/about",
@@ -21,7 +19,7 @@ const routes = [
   {
     path: "/create",
     name: "create",
-    component: Create
+    component: () => import("../views/Create.vue")
   },
   {
     path: "/login",
@@ -32,6 +30,12 @@ const routes = [
     path: "/register",
     name: "register",
     component: () => import("../views/Register.vue")
+  },
+  {
+    path:"/edit",
+    name: "edit",
+    component: () => import("../views/Edit.vue"),
+    props:true
   }
 ];
 
