@@ -8,9 +8,9 @@
         <md-field>
           <md-input type="text" v-model="issue.name" placeholder="describe issue" />
         </md-field>
-          <md-field v-if="issue.id > 0">
-            <md-button type="submit" @click="edit">Confirm</md-button>
-          </md-field>
+        <md-field v-if="issue.id > 0">
+          <md-button type="submit" @click="edit">Confirm</md-button>
+        </md-field>
         <md-field v-else>
           <md-button type="submit" @click="create">Create</md-button>
         </md-field>
@@ -26,14 +26,14 @@ export default {
   name: "addIssue",
   props: ["issue"],
   methods: {
-    ...mapActions(['addIssue', 'editIssue']),
-    create () {
+    ...mapActions(["addIssue", "editIssue"]),
+    create() {
       this.addIssue(this.issue);
-      this.$router.push('/');
+      this.$router.push("/");
     },
-    edit(){
+    edit() {
       this.editIssue(this.issue);
-      this.$router.push('/');
+      this.$router.push("/");
     }
   }
 };

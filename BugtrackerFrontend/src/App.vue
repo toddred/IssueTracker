@@ -8,7 +8,7 @@
           <router-link to="/about">About</router-link>|
           <router-link to="/create">Create</router-link>
           <router-link v-if="!isAuthenticated" to="/login">Login</router-link>
-
+          <md-button v-else @click="logout">Logout</md-button>
 
         </div>
       </md-app-toolbar>
@@ -23,7 +23,13 @@ import { mapGetters } from "vuex";
 
 export default {
   name:'App',
-  computed:mapGetters(["isAuthenticated"])
+  computed:mapGetters(["isAuthenticated"]),
+  methods:{
+    logout(){
+      this.$store.dispatch('logout');
+    }
+  }
+  
 }
 </script>
 <style>
