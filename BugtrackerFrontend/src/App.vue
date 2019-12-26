@@ -2,12 +2,9 @@
   <div id="app">
     <md-app md-mode="reveal">
       <md-app-toolbar class="md-primary">
-        <h1>Bug Tracker</h1>
+        <h1 router-link to="/">Bug Tracker</h1>
         <div id="nav">
-          <router-link to="/">Home</router-link>|
-          <router-link to="/about">About</router-link>|
-          <router-link to="/create">Create</router-link>
-          <router-link v-if="!isAuthenticated" to="/login">Login</router-link>
+          <md-button class="md-primary" v-if="!isAuthenticated" router-link to="/login">Login</md-button>
           <md-button v-else @click="logout">Logout</md-button>
 
         </div>

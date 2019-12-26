@@ -22,7 +22,7 @@ namespace BugtrackerIdentityService.Models
 
         public User(string name, string email, string password)
         {
-            Name = name;
+            Name = name.ToLower();
             Email = email.ToLower();
             Salt = CreateSalt();
             Password = HashPassword(password, Salt);

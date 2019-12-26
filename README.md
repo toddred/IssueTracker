@@ -5,6 +5,7 @@ A issue tracking system for tracking software bugs. Built this as an example pro
 * Edit an issue
 * Use authenticated routes from web frontend
 * Logout
+* Fixed: Main issue list doest update after edit
 
 **TODOS**
 -----------------
@@ -14,12 +15,13 @@ A issue tracking system for tracking software bugs. Built this as an example pro
 * Edit a comment 
 * Archive a comment
 * Handle expired tokens
-* Tidy up frontend
 * Smart Email Validation
 * Dumb Email Validation
 * Auth lockout after set number of failed attempts
 * Password reset
-
+* 
+**UI Changes**
+-----------------
+* pull login buttons right 
 **Bugs**
 -----------------
-* Main issue list doest update after edit

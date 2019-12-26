@@ -1,7 +1,6 @@
 <template>
   <div id="edit">
     <add-issue :issue="editIssue"></add-issue>
-    <button @click="navigateHome">home</button>
   </div>
 </template>
 <script>
@@ -14,14 +13,10 @@ export default {
   data() {
     return {
       editIssue: {
-        id: 0
+        id: 0,
+        name:""
       }
     };
-  },
-  methods: {
-    navigateHome() {
-      this.$router.push("/");
-    }
   },
   created() {
     this.editIssue = this.issue;

@@ -18,22 +18,6 @@ const actions = {
       // handle error
     }
   },
-  // async secureIssues({ commit, state }) {
-  //   if (state.authenticated) {
-  //     const response = await Axios.get(BASE_URL + "/secure", {
-  //       headers: {
-  //         //"Content-Type": "application/json",
-  //         Authorization: state.auth.token
-  //       }
-  //     });
-  //     //if (response.status == 200){
-  //     commit("setIssues", response.data);
-  //     //}
-  //     // else{
-  //     //   // handle error
-  //     // }
-  //   }
-  // },
   async addIssue({ commit, rootState }, issue) {
     const response = await Axios.post(BASE_URL, issue, {
       headers: {
@@ -69,9 +53,10 @@ const mutations = {
   deleteIssue: (state, id) =>
     (state.issues = state.issues.filter(issue => issue.id !== id)),
   changeIssue: (state, issue) => {
-    let idx = state.issues.findIndex(old => old.id == issue.id);
-    state.issues[idx] = issue;
-
+    let remainingIssues = state.issues.filter(
+      element => element.id !== issue.id
+    );
+    state.issues = [...remainingIssues, issue];
   }
 };
 
