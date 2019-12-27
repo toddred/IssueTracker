@@ -45,7 +45,7 @@ const actions = {
       }
     });
     commit("changeIssue", response.data);
-  }
+  },
 };
 const mutations = {
   setIssues: (state, issues) => (state.issues = issues),

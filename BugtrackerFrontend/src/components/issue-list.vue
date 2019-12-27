@@ -3,7 +3,7 @@
     <md-card>
       <md-card-header>
         <h3>Current Issues</h3>
-        <md-button router-link-to="/create" class="md-fab md-primary">
+        <md-button router-link to="/create" class="md-fab md-primary">
           <md-icon>add</md-icon>
         </md-button>
       </md-card-header>

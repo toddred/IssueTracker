@@ -3,8 +3,7 @@
     <md-card>
       <md-card-header>
         <h3>New Issue</h3>
-    <md-button @click="navigateHome">X</md-button>        
-
+        <md-button @click="navigateHome">X</md-button>
       </md-card-header>
       <md-card-content>
         <md-field>
@@ -37,7 +36,9 @@ export default {
       this.editIssue(this.issue);
       this.$router.push("/");
     },
-    navigateHome(){this.$router.push('/');}
+    navigateHome() {
+      this.$router.push("/");
+    }
   }
 };
 </script>
