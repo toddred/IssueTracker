@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using BugTrackerIssueApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -41,10 +42,11 @@ namespace BugTrackerIssueApi.Controllers
             return Ok(await _context.Issues.FindAsync(id));
         }
         // POST: /issues
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         public async Task<ActionResult> Create([FromBody]Issue issue)
         {
+            issue.CreatedBy = Int32.Parse(User.Claims.First().Value);
             try
             {
                 _context.Issues.Add(issue);

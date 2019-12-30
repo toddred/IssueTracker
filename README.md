@@ -6,11 +6,12 @@ A issue tracking system for tracking software bugs. Built this as an example pro
 * Use authenticated routes from web frontend
 * Logout
 * Fixed: Main issue list doest update after edit
+* Add ownership
 
 **TODOS**
 -----------------
 
-* Add ownership
+* only owners should be able to edit/close/archive issues
 * Add a comment
 * Edit a comment 
 * Archive a comment
@@ -19,9 +20,12 @@ A issue tracking system for tracking software bugs. Built this as an example pro
 * Dumb Email Validation
 * Auth lockout after set number of failed attempts
 * Password reset
-* 
+ 
 **UI Changes**
 -----------------
+
 * pull login buttons right 
+* handle ownership on front
+
 **Bugs**
 -----------------

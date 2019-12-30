@@ -21,9 +21,9 @@ namespace BugtrackerIdentityService.Controllers
     {
         private readonly IdentityContext _context;
 
-        public UserController(IdentityContext Context)
+        public UserController(IdentityContext context)
         {
-            _context = Context;
+            _context = context;
         }
         
         [HttpPost("authenticate")]
@@ -37,10 +37,10 @@ namespace BugtrackerIdentityService.Controllers
 
             if (user != null && user.IsCorrectPassword(auth.Password))
             {
-                return Ok(createJwtPacket(user));
+                return Ok(CreateJwtPacket(user));
             }
             
-            return BadRequest(new {message = "Username or Password is incorrect"});
+            return BadRequest(new {message = "Username or Password are incorrect"});
         }
 
         [HttpPost("register")]
@@ -54,7 +54,7 @@ namespace BugtrackerIdentityService.Controllers
                 User newUser = new User(register.Username, register.Email, register.Password);
                 _context.Users.Add(newUser);
                 await _context.SaveChangesAsync();
-                return Ok(createJwtPacket(newUser));
+                return Ok(CreateJwtPacket(newUser));
             }
             catch (Exception e)
             {
@@ -64,21 +64,24 @@ namespace BugtrackerIdentityService.Controllers
             
         }
 
-        private JwtPacket createJwtPacket(User user)
+        private static JwtPacket CreateJwtPacket(User user)
         {
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("move this to configuration"));
             var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
-            var claims = new Claim[]
+            var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString())
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.Name) // will replace this with datetime
             };
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(new JwtSecurityToken(claims: claims, signingCredentials: signingCredentials));
-            return new JwtPacket(){ Token = encodedJwt};
+            return new JwtPacket { Token = encodedJwt, UserId = user.Id, UserName = user.Name};
         }
     }
 
     internal class JwtPacket
     {
         public string Token { get; set; }
+        public int UserId { get; set; }
+        public string UserName { get; set; }
     }
 }
