@@ -71,17 +71,15 @@ namespace BugtrackerIdentityService.Controllers
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.Name) // will replace this with datetime
+                // new Claim(JwtRegisteredClaimNames.UniqueName, user.Name) // will replace this with datetime
             };
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(new JwtSecurityToken(claims: claims, signingCredentials: signingCredentials));
-            return new JwtPacket { Token = encodedJwt, UserId = user.Id, UserName = user.Name};
+            return new JwtPacket { Token = encodedJwt};
         }
     }
 
     internal class JwtPacket
     {
         public string Token { get; set; }
-        public int UserId { get; set; }
-        public string UserName { get; set; }
     }
 }

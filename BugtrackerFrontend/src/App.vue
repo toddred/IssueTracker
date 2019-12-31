@@ -6,7 +6,10 @@
         <h1>Bug Tracker</h1>
         </router-link>
         <div id="nav" >
-          <md-button class="md-primary" v-if="!isAuthenticated" router-link to="/login">Login</md-button>
+          <router-link to="/login" v-if="!isAuthenticated">
+            <md-button class="md-primary">Login</md-button>
+          </router-link>
+          
           <md-button v-else @click="logout">Logout</md-button>
         </div>
       </md-app-toolbar>

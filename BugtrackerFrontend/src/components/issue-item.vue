@@ -48,7 +48,7 @@ export default {
       this.$router.push({ name: "edit", params: { issue } });
     },
     close(issue){ 
-      issue.closedOn = new Date.now();
+      issue.closedOn = new Date;
       this.editIssue(issue);
     }
   }

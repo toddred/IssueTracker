@@ -59,35 +59,54 @@ namespace BugTrackerIssueApi.Controllers
             return Ok(issue);
         }
         // PUT : /issues
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut]
         public async Task<ActionResult> Edit([FromBody]Issue issue)
         {
-            try
+            Issue editIssue = _context.Issues.Find(issue.Id);
+            int ownerId = Int32.Parse(User.Claims.First().Value);
+            _logger.LogInformation($" Owner Id is {ownerId}");
+            if (editIssue.CreatedBy == ownerId)
             {
-                issue.ModifiedOn = DateTime.Now;
-                _context.Issues.Update(issue);
-                await _context.SaveChangesAsync();
-                return Ok(issue);
+                editIssue.ModifiedOn = DateTime.Now;
+                //editIssue.Active = issue.Active;
+                editIssue.Name = issue.Name;
+                editIssue.Priority = issue.Priority;
+                editIssue.ClosedOn = issue.ClosedOn;
+                try
+                {
+                    
+                    //_context.Issues.Update(issue);
+                    await _context.SaveChangesAsync();
+                    return Ok(editIssue);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e.Message);
+                }
             }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-            }
+
             return BadRequest();
         }
         // DELETE : issues/{id}
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpDelete("{id}")]
         public async Task<ActionResult> Archive([FromRoute]int id)
         {
+            int ownerId = Int32.Parse(User.Claims.First().Value);
+            _logger.LogInformation($" Owner Id is {ownerId}");
             try
             {
-                var issue = _context.Issues.Find(id);
+                var issue = await _context.Issues.FindAsync(id);
+
                 issue.Active = false;
                 issue.ModifiedOn = DateTime.Now;
-                await _context.SaveChangesAsync();
-                return Ok();
+                if (issue.CreatedBy == ownerId)
+                {
+                    await _context.SaveChangesAsync();
+                    return Ok();
+                }
+
             }
             catch (Exception e)
             {
