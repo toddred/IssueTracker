@@ -24,7 +24,8 @@ export default {
     ...mapGetters(["allIssues", "isAuthenticated"])
   },
   components: {
-    IssueItem
+    IssueItem,
+    
   },
   methods: {
     ...mapActions["getIssues"]
