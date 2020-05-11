@@ -12,19 +12,20 @@
       </span>
     </md-list-item>
     <md-list-item>
-      <h4>Comments</h4>
-      <ul>
-        <li v-for=" comment in issue.comments" :key="comment.id">comment</li>
-      </ul>
+      <comment-list :issue="issue"></comment-list>
     </md-list-item>
   </div>
 </template>
 
 <script>
+import CommentList from "../components/comment-list";
 import { mapActions } from "vuex";
 export default {
   name: "IssueItem",
   props: ["issue"],
+  components:{
+    CommentList
+  },
   computed: {
     datetime: function() {
       let dt = "";
